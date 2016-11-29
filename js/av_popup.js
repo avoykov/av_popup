@@ -5,19 +5,17 @@
  */
 
 (function ($) {
-  var basePath;
-
   Drupal.behaviors.avPopup = {
     attach: function (context, settings) {
       var avPopup = Drupal.settings.avPopup;
 
       // Remove cookie conform settings.
-      if(avPopup.reset) {
-        $.cookie("av_popup", null, { path: '/' });
+      if (avPopup.reset) {
+        $.cookie("av_popup", null, {path: '/'});
       }
 
       var $cookie = $.cookie("av_popup");
-      if (!$cookie) {
+      if (!$cookie || avPopup.reset) {
         setTimeout(function () {
           $.magnificPopup.open({
             key: 'av-popup',
@@ -34,7 +32,9 @@
               open: function () {
                 $.magnificPopup.instance.close = function () {
                   // Lets set o cookie with expired  period.
-                  $.cookie("av_popup", true, {path: '/', expires: 48 * 3600 * 1000});
+                  var date = new Date();
+                  date.setTime(date.getTime() + (48 * 3600 * 1000));
+                  $.cookie("av_popup", true, {expires: date});
                   $.magnificPopup.proto.close.call(this);
                 };
               }
