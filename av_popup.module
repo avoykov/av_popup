@@ -65,9 +65,6 @@ function av_popup_preprocess_page(&$variables) {
   $settings = variable_get('av_popup_settings', array());
   if (_av_popup_check_visibility($settings)) {
     $mpath = drupal_get_path('module', 'av_popup');
-    $region = element_children($page);
-    $region = reset($region);
-
     $image = file_load($settings['image']);
     $url = file_create_url($image->uri);
     $settings['markup'] = theme('av_popup_wrapper', array(
@@ -78,13 +75,12 @@ function av_popup_preprocess_page(&$variables) {
     drupal_add_css($mpath . '/css/av_popup.css');
     drupal_add_css($mpath . '/jquery-plugins/magnific-popup/dist/magnific-popup.css');
 
+    drupal_add_library('system', 'jquery.cookie');
     drupal_add_js($mpath . '/jquery-plugins/magnific-popup/dist/magnific-popup.css');
     drupal_add_js($mpath . '/jquery-plugins/magnific-popup/dist/jquery.magnific-popup.min.js');
-    drupal_add_js(array(
-      'data' => array('avPopup' => $settings),
-      'type' => 'setting',
-    ));
+    drupal_add_js(array('avPopup' => $settings), 'setting');
     drupal_add_js($mpath . '/js/av_popup.js');
+  }
 }
 
   /**
