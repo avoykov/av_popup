@@ -1,0 +1,126 @@
+<?php
+/**
+ * @file
+ * Contains all hooks definitions, common and helper functions.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function av_popup_menu() {
+  $items = array();
+
+  $items['admin/config/av-popup'] = array(
+    'title' => 'AV popup settings',
+    'description' => 'Settings which relates to AV popup.',
+    'position' => 'left',
+    'weight' => 20,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer av popup'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/config/av-popup/settings'] = array(
+    'title' => 'AV popup settings',
+    'weight' => -25,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('av_popup_settings_form'),
+    'access arguments' => array('administer av popup'),
+    'file' => 'av_popup.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function av_popup_permission() {
+  return array(
+    'administer av popup' => array(
+      'title' => t('Administer AV popup settings'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function av_popup_theme() {
+  $path = drupal_get_path('module', 'av_popup');
+  return array(
+    'av_popup_wrapper' => array(
+      'variables' => array('settings' => NULL),
+      'path' => $path . '/templates',
+      'template' => 'av_popup_wrapper',
+    ),
+  );
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function av_popup_page_build(&$page) {
+  $settings = variable_get('av_popup_settings', array());
+  if (_av_popup_check_visibility($settings)) {
+    $mpath = drupal_get_path('module', 'av_popup');
+    $region = element_children($page);
+    $region = reset($region);
+
+    $image = file_load($settings['image']);
+    $url = file_create_url($image->uri);
+    $settings['markup'] = theme('av_popup_wrapper', array(
+      'image' => $url,
+      'url' => $settings['link'],
+    ));
+
+    $page[$region]['#attached']['css'][] = $mpath . '/css/av_popup.css';
+    $page[$region]['#attached']['css'][] = $mpath . '/jquery-plugins/magnific-popup/dist/magnific-popup.css';
+    $page[$region]['#attached']['js'][] = $mpath . '/jquery-plugins/magnific-popup/dist/jquery.magnific-popup.js';
+    $page[$region]['#attached']['js'][] = array(
+      'data' => array('avPopup' => $settings),
+      'type' => 'setting',
+    );
+    $page[$region]['#attached']['js'][] = $mpath . '/js/av_popup.js';
+  }
+}
+
+/**
+ * Helper function for checking should popup be showed on current page or not.
+ *
+ * @param array $settings
+ *   Array will all popup settings.
+ *
+ * @return bool
+ *   Indicates status of checking.
+ */
+function _av_popup_check_visibility($settings) {
+  if (empty($settings)) {
+    return FALSE;
+  }
+
+  if ($settings['filters']['pages']) {
+    $pages = drupal_strtolower($settings['filters']['pages']);
+    if (strlen($settings['filters']['visibility'])) {
+      $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+      $page_match = drupal_match_path($path, $pages);
+      if ($path != $_GET['q']) {
+        $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
+      }
+      $visibility = $settings['filters']['visibility'] == 'allowed' ? 1 : 0;
+      $page_match = !($visibility xor $page_match);
+    }
+    elseif (module_exists('php')) {
+      $page_match = php_eval($settings['filters']['pages']);
+    }
+    else {
+      $page_match = FALSE;
+    }
+  }
+  else {
+    $page_match = TRUE;
+  }
+
+  return $page_match;
+}

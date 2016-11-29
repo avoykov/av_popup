@@ -1,0 +1,11 @@
+#av-popup-wrapper {
+    display: block;
+    position: relative;
+    width: auto;
+    max-width: 400px;
+    max-height: 800px;
+    min-height: 400px;
+    margin: 20px auto;
+    text-align: center;
+    background-color: transparent;
+}
