@@ -8,5 +8,5 @@
  */
 ?>
 <a id="av-popup-wrapper"
-   style="background-image: url(<?php echo $image; ?>);  background-repeat: no-repeat; background-attachment: fixed; background-position: center;"
+   style="background-image: url(<?php echo $image; ?>);  background-repeat: no-repeat; background-position: center;"
    href="<?php echo $url; ?>"> <a>
