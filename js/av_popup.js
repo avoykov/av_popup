@@ -34,7 +34,7 @@
               open: function () {
                 $.magnificPopup.instance.close = function () {
                   // Lets set o cookie with expired  period.
-                  $.cookie("av_popup", true, { path: window.location.pathname, expires: 48 * 3600 * 1000});
+                  $.cookie("av_popup", true, { expires: 48 * 3600 * 1000});
                   $.magnificPopup.proto.close.call(this);
                 };
               }
