@@ -41,6 +41,7 @@ function av_popup_settings_form($form, &$form_state) {
     '#description' => t('Delay in popup (when it comes up - seconds).'),
     '#default_value' => isset($settings['delays']['up']) ? $settings['delays']['up'] : 1,
     '#element_validate' => array('element_validate_integer_positive'),
+    '#required' => TRUE,
   );
 
   $form['settings']['delays']['between'] = array(
@@ -49,6 +50,7 @@ function av_popup_settings_form($form, &$form_state) {
     '#description' => t('Delay in between when user last saw popup (in hours).'),
     '#default_value' => isset($settings['delays']['between']) ? $settings['delays']['between'] / 3600 : 48,
     '#element_validate' => array('element_validate_integer_positive'),
+    '#required' => TRUE,
   );
 
   $form['settings']['delays']['close'] = array(
@@ -57,6 +59,7 @@ function av_popup_settings_form($form, &$form_state) {
     '#description' => t('Time for the popup to automatically close (seconds)'),
     '#default_value' => isset($settings['delays']['close']) ? $settings['delays']['close'] : 1,
     '#element_validate' => array('element_validate_integer_positive'),
+    '#required' => TRUE,
   );
 
   $form['settings']['reset'] = array(
@@ -72,6 +75,7 @@ function av_popup_settings_form($form, &$form_state) {
     '#description' => t('Link - internal or external link'),
     '#default_value' => isset($settings['link']) ? $settings['link'] : FALSE,
     '#element_validate' => array('element_validate_url'),
+    '#required' => TRUE,
   );
 
   $form['settings']['image'] = array(
@@ -79,6 +83,7 @@ function av_popup_settings_form($form, &$form_state) {
     '#title' => t('Popup image'),
     '#default_value' => isset($settings['image']) ? $settings['image'] : FALSE,
     '#upload_location' => 'public://av_popup',
+    '#required' => TRUE,
   );
 
   $form['settings']['filters'] = array(
@@ -106,6 +111,7 @@ function av_popup_settings_form($form, &$form_state) {
       '%blog-wildcard' => 'blog/*',
       '%front' => '<front>',
     )),
+    '#required' => TRUE,
   );
 
   $form['save'] = array(
