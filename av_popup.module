@@ -51,7 +51,7 @@ function av_popup_theme() {
   $path = drupal_get_path('module', 'av_popup');
   return array(
     'av_popup_wrapper' => array(
-      'variables' => array('settings' => NULL),
+      'variables' => array('image' => NULL, 'url' => NULL, 'target' => NULL),
       'path' => $path . '/templates',
       'template' => 'av_popup_wrapper',
     ),
@@ -70,6 +70,7 @@ function av_popup_preprocess_page(&$variables) {
     $settings['markup'] = theme('av_popup_wrapper', array(
       'image' => $url,
       'url' => $settings['link'],
+      'target' => $settings['new'] ? '_blank' : '',
     ));
 
     drupal_add_css($mpath . '/css/av_popup.css');
@@ -83,41 +84,41 @@ function av_popup_preprocess_page(&$variables) {
   }
 }
 
-  /**
-   * Helper function for checking should popup be showed on current page or not.
-   *
-   * @param array $settings
-   *   Array will all popup settings.
-   *
-   * @return bool
-   *   Indicates status of checking.
-   */
-  function _av_popup_check_visibility($settings) {
-    if (empty($settings)) {
-      return FALSE;
-    }
+/**
+ * Helper function for checking should popup be showed on current page or not.
+ *
+ * @param array $settings
+ *   Array will all popup settings.
+ *
+ * @return bool
+ *   Indicates status of checking.
+ */
+function _av_popup_check_visibility($settings) {
+  if (empty($settings)) {
+    return FALSE;
+  }
 
-    if ($settings['filters']['pages']) {
-      $pages = drupal_strtolower($settings['filters']['pages']);
-      if (strlen($settings['filters']['visibility'])) {
-        $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
-        $page_match = drupal_match_path($path, $pages);
-        if ($path != $_GET['q']) {
-          $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
-        }
-        $visibility = $settings['filters']['visibility'] == 'allowed' ? 1 : 0;
-        $page_match = !($visibility xor $page_match);
+  if ($settings['filters']['pages']) {
+    $pages = drupal_strtolower($settings['filters']['pages']);
+    if (strlen($settings['filters']['visibility'])) {
+      $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+      $page_match = drupal_match_path($path, $pages);
+      if ($path != $_GET['q']) {
+        $page_match = $page_match || drupal_match_path($_GET['q'], $pages);
       }
-      elseif (module_exists('php')) {
-        $page_match = php_eval($settings['filters']['pages']);
-      }
-      else {
-        $page_match = FALSE;
-      }
+      $visibility = $settings['filters']['visibility'] == 'allowed' ? 1 : 0;
+      $page_match = !($visibility xor $page_match);
+    }
+    elseif (module_exists('php')) {
+      $page_match = php_eval($settings['filters']['pages']);
     }
     else {
-      $page_match = TRUE;
+      $page_match = FALSE;
     }
-
-    return $page_match;
   }
+  else {
+    $page_match = TRUE;
+  }
+
+  return $page_match;
+}
