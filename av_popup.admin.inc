@@ -78,6 +78,13 @@ function av_popup_settings_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  $form['settings']['new'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Open in new window'),
+    '#description' => t('On click to popup open in new window.'),
+    '#default_value' => isset($settings['new']) ? $settings['new'] : FALSE,
+  );
+
   $form['settings']['image'] = array(
     '#type' => 'managed_file',
     '#title' => t('Popup image'),
