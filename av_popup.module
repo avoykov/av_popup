@@ -51,7 +51,7 @@ function av_popup_theme() {
   $path = drupal_get_path('module', 'av_popup');
   return array(
     'av_popup_wrapper' => array(
-      'variables' => array('image' => NULL, 'url' => NULL, 'target' => NULL),
+      'variables' => array('image' => NULL, 'url' => NULL, 'target' => NULL, 'close_btn' => NULL),
       'path' => $path . '/templates',
       'template' => 'av_popup_wrapper',
     ),
@@ -71,6 +71,7 @@ function av_popup_preprocess_page(&$variables) {
       'image' => $url,
       'url' => $settings['link'],
       'target' => $settings['new'] ? '_blank' : '',
+      'close_btn' => $settings['close_btn'] ? TRUE : FALSE,
     ));
 
     drupal_add_css($mpath . '/css/av_popup.css');

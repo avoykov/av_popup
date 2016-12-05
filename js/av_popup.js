@@ -13,16 +13,17 @@
       if (avPopup.reset) {
         $.cookie("av_popup", null, {path: '/'});
       }
-
       var $cookie = $.cookie("av_popup");
       if (!$cookie || avPopup.reset) {
         setTimeout(function () {
           $.magnificPopup.open({
             key: 'av-popup',
-            showCloseBtn: false,
+            showCloseBtn: avPopup.close_btn ? true : false,
             enableEscapeKey: false,
-            closeOnBgClick: false,
+            closeOnBgClick: avPopup.close_bg_click ? true : false,
             closeOnContentClick: false,
+            closeBtnInside: true,
+            fixedContentPos: true,
             items: {},
             type: 'inline',
             inline: {
@@ -47,6 +48,9 @@
           $.magnificPopup.close();
         }, avPopup.delays.up * 1000 + avPopup.delays.close * 1000);
 
+        jQuery('#av-popup-close-btn', context).on('click', function () {
+          $.magnificPopup.close();
+        });
       }
     }
   };

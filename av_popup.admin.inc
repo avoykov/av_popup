@@ -85,6 +85,20 @@ function av_popup_settings_form($form, &$form_state) {
     '#default_value' => isset($settings['new']) ? $settings['new'] : FALSE,
   );
 
+  $form['settings']['close_bg_click'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Close on background click'),
+    '#description' => t('On click to background closes popup.'),
+    '#default_value' => isset($settings['close_bg_click']) ? $settings['close_bg_click'] : TRUE,
+  );
+
+  $form['settings']['close_btn'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show close button'),
+    '#description' => t('Shows close button on right top.'),
+    '#default_value' => isset($settings['close_btn']) ? $settings['close_btn'] : TRUE,
+  );
+
   $form['settings']['image'] = array(
     '#type' => 'managed_file',
     '#title' => t('Popup image'),

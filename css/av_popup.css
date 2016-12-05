@@ -9,3 +9,15 @@
     text-align: center;
     background-color: transparent;
 }
+.mfp-content {
+    max-width: 400px;
+}
+
+#av-popup-close-btn {
+    background-image: url(../images/close_btn.png);
+    background-size: contain;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    z-index: 2000;
+    right: 12px;
+}
